@@ -3,9 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// src/index.js 或 src/index.tsx
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min'; // 引入 Bootstrap JS 包
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 
 const root = ReactDOM.createRoot(

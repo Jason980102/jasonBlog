@@ -1,195 +1,137 @@
 import React, { useEffect, useState, useRef } from 'react';
 import '../style/Home.css';
+import { useLang } from './layout/LangProvider'
+type I18nText = { en: string; zh: string };
+type Block = { id: string; title: I18nText; content: I18nText };
 
-interface Issue {
-    id: number;
-    title: string;
-    body: string;
-    html_url: string;
+function asI18nText(v: any): I18nText {
+    // 支援舊格式：如果是字串 -> 視為中文，同步放到英文，避免空白
+    if (typeof v === 'string') return { en: v, zh: v };
+    // 新格式：優先使用，缺的語言用另一個補上
+    const en = (v?.en ?? v?.zh ?? '').toString();
+    const zh = (v?.zh ?? v?.en ?? '').toString();
+    return { en, zh };
 }
 
-//Fetch當前時間
+function normalizeBlock(raw: any): Block | null {
+    if (!raw?.id) return null;
+    return {
+        id: String(raw.id),
+        title: asI18nText(raw.title),
+        content: asI18nText(raw.content),
+    };
+}
+
+
 const Home: React.FC = () => {
-    const [currentTime, setCurrentTime] = useState<string>("");
-    const [issues, setIssues] = useState<Issue[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-    const [showBlock, setShowBlock] = useState<boolean>(false);
     const [showScrollToTop, setShowScrollToTop] = useState<boolean>(false);
     const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const { lang } = useLang();
+    const [blocks, setBlocks] = useState<Block[]>([]);
+    const [blocksError, setBlocksError] = useState<string | null>(null);
 
+    // Avatar / icons 漸入
     useEffect(() => {
-        function startTime() {
-            var today = new Date();
-            var yyyy: number = today.getFullYear();
-            var MM: string = (today.getMonth() + 1).toString(); // 使用 toString() 將月份轉換為字串
-            var dd: string = today.getDate().toString();
-            var hh: string = today.getHours().toString();
-            var mm: string = today.getMinutes().toString();
-            var ss: string = today.getSeconds().toString();
-            MM = checkTime(parseInt(MM));
-            dd = checkTime(parseInt(dd));
-            mm = checkTime(parseInt(mm));
-            ss = checkTime(parseInt(ss));
-            var day: string = "";
-            if (today.getDay() == 0) day = "星期日 ";
-            if (today.getDay() == 1) day = "星期一 ";
-            if (today.getDay() == 2) day = "星期二 ";
-            if (today.getDay() == 3) day = "星期三 ";
-            if (today.getDay() == 4) day = "星期四 ";
-            if (today.getDay() == 5) day = "星期五 ";
-            if (today.getDay() == 6) day = "星期六 ";
-
-            setCurrentTime(`${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss} ${day}`);
-            setTimeout(startTime, 1000);
-        }
-
-        function checkTime(i: number): string {
-            if (i < 10) {
-                return "0" + i;
-            }
-            return i.toString();
-        }
-
-        startTime();
-    }, []);
-
-    //頭像與icon浮現
-    useEffect(() => {
-        const delay = 2000;
         const timer = setTimeout(() => {
             document.querySelector('.avatar')?.classList.add('show');
-            document.querySelectorAll('.icon').forEach(icon => {
-                icon.classList.add('show');
-            });
-        }, delay);
-
-        // 清除定时器
+            document.querySelectorAll('.icon').forEach(el => el.classList.add('show'));
+        }, 2000);
         return () => clearTimeout(timer);
     }, []);
 
-    //Block動態顯示
+    //load blocks.json
     useEffect(() => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // 可选：一旦元素可见，就停止观察它
-                }
-            });
-        }, { threshold: 0.1 }); // 当元素至少有10%可见时触发
+        (async () => {
+            try {
+                setBlocksError(null);
+                const res = await fetch(`/data/blocks.json?ts=${Date.now()}`, { cache: 'no-store' });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const list: Block[] = (Array.isArray(data?.blocks) ? data.blocks : [])
+                    .map(normalizeBlock)
+                    .filter((x: any): x is Block => !!x);
 
-        blockRefs.current.forEach(ref => {
-            if (ref) observer.observe(ref);
-        });
+                const seen = new Set<string>();
+                const unique = list.filter(b => (seen.has(b.id) ? false : (seen.add(b.id), true)));
 
-        return () => {
-            blockRefs.current.forEach(ref => {
-                if (ref) observer.unobserve(ref);
-            });
-        };
+                setBlocks(unique);
+            } catch (e: any) {
+                setBlocksError(e?.message || '載入失敗');
+            }
+        })();
     }, []);
 
-    //回到最上層按鈕
+    // Block 進場
     useEffect(() => {
-        const handleScroll = () => {
-            setShowScrollToTop(window.scrollY > 150);
-        };
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.0, root: null, rootMargin: '0px 0px -10% 0px' }
+        );
 
+        blockRefs.current.forEach((ref) => ref && observer.observe(ref));
+
+        // 立即檢查目前就已在視窗內的
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        blockRefs.current.forEach((ref) => {
+            if (!ref) return;
+            const r = ref.getBoundingClientRect();
+            if (r.top < vh && r.bottom > 0) ref.classList.add('visible');
+        });
+
+        return () => blockRefs.current.forEach((ref) => ref && observer.unobserve(ref));
+    }, [blocks]);
+
+    // 回到頂端按鈕
+    useEffect(() => {
+        const handleScroll = () => setShowScrollToTop(window.scrollY > 150);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const toggleTheme = () => {
-        setIsDarkMode(!isDarkMode);
-    };
+    const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
     return (
-        <div className={`main-container ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
-            <img src="/JSBG.jpg" className="background-image" />
-            <h1 className="blog-title">Jason's Blog</h1>
-            <div className="theme-toggle-button" onClick={toggleTheme}>
-                {isDarkMode ? '🌙' : '☀️'}
-            </div>
-            <div className="blog-container">
-                <img src="/Turtleclip.jpg" alt="Avatar" className="avatar" />
-                {error && <div>Error: {error}</div>}
-                <ul className="blog-list">
-                    {issues.map((issue) => (
-                        <li key={issue.id} className="blog-item">
-                            <a href={issue.html_url} target="_blank" rel="noopener noreferrer">
-                                {issue.title}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
+        <div className="main-container route-home">
+            <img src="/JSBG.jpg" className="background-image" alt="" />
+            <div className="hero">
+                <img src="/profilepicscalelarge.jpg" alt="Avatar" className="avatar avatar-overlap" />
             </div>
 
-            <nav className="nav-box">
-                <input type="checkbox" id="menu" />
-                <label htmlFor="menu" className="line">
-                    <div className="menu"></div>
-                </label>
-                <div className="menu-list">
-                    <ul>
-                        <li><b><a href="/" style={{ color: 'rgb(255, 255, 255)' }}><i className="fa fa-home"></i>Home</a></b></li>
-                        <li><b><a href="Blog" style={{ color: 'rgb(255, 255, 255)' }}><i className="fa fa-chevron-circle-right"></i>Blog</a></b></li>
-                        <li><b><a href="俄羅斯方塊製作步驟.html" style={{ color: 'rgb(255, 255, 255)' }}><i className="fa fa-chevron-circle-right"></i>Work</a></b></li>
-                    </ul>
+            <h1 className="blog-title">Jason Chen</h1>
+
+            {blocks.map((b, idx) => (
+                <div
+                    key={b.id ?? idx}
+                    ref={el => (blockRefs.current[idx] = el)}
+                    className={`block ${idx % 2 === 0 ? 'block--rtl' : 'block--ltr'}`}
+                >
+                    <h2 className={`shape ${idx % 2 !== 1 ? 'title-right' : ''}`}>
+                        {b.title[lang]}
+                    </h2>
+                    <div className="content" dangerouslySetInnerHTML={{ __html: b.content[lang] }} />
                 </div>
-            </nav>
+            ))}
 
-            <div className="connect-container">
-                <div className="bottom-info text-center">
-                    <h6>與我聯繫</h6>
-                    <hr />
-                </div>
-                <ul className="button">
-                    <li className="icon"><a href="https://www.facebook.com/profile.php?id=100006924015388" className="fa fa-facebook"></a></li>
-                    <li className="icon"><a href="https://www.instagram.com/jason980102/" className="fa fa-instagram"></a></li>
-                    <li className="icon"><a href="https://www.youtube.com/channel/UCZK96SXgP-jAT6jApI1FeUg" className="fa fa-youtube"></a></li>
-                    <li className="icon"><a href="mailto:u11010012@go.utaipei.edu.tw" className="fa fa-envelope" style={{ fontSize: '25px' }}></a></li>
-                </ul>
 
-            </div>
-
-            <div ref={el => blockRefs.current[0] = el} className="block">
-                <h2 className="shape">自我介紹</h2>
-                <div className=" justify-content-center">
-                    <h6>Hi ! 我是Jason, 目前就讀台北市立大學資訊科學系三年級, 目前的目標是要推甄研究所或是去國外念研究所。</h6>
-                    <h6>我其實是轉系生，我原本的系所是地球環境暨生物資源學系，而我在大一升大二的時候轉到資訊科學系，也就一直讀到現在，雖然很累，但是蠻值得的，因為我終於找到我歸屬的地方了。</h6>
-                </div>
-            </div>
-
-            <div ref={el => blockRefs.current[1] = el} className="block">
-                <h2 className="shape">目前經驗</h2>
-                <div className=" justify-content-center">
-                    <h6>之前有去科技公司實習過，主要是學習前端的處裡，以及各項Excel表格的整理</h6>
-                    <h6>我其實是轉系生，我原本的系所是地球環境暨生物資源學系，而我在大一升大二的時候轉到資訊科學系，也就一直讀到現在，雖然很累，但是蠻值得的，因為我終於找到我歸屬的地方了。</h6>
-                </div>
-            </div>
-
-            <div ref={el => blockRefs.current[2] = el} className="block">
-                <h2 className="shape">作品集</h2>
-                <div className=" justify-content-center">
-                    <h6>Hi, 我是Jason, 目前就讀台北市立大學資訊科學系三年級, 目前的目標是要推甄研究所或是去國外念研究所。</h6>
-                    <h6>我其實是轉系生，我原本的系所是地球環境暨生物資源學系，而我在大一升大二的時候轉到資訊科學系，也就一直讀到現在，雖然很累，但是蠻值得的，因為我終於找到我歸屬的地方了。</h6>
-                </div>
-            </div>
-            <div className="bottom-info text-center">
-                <h6>當前時間：<span>{currentTime}</span></h6>
-            </div>
+            {/* 回頂按鈕 */}
             {showScrollToTop && (
-                <button onClick={scrollToTop} className="scroll-to-top">
-                    Scroll to Top
+                <button onClick={scrollToTop} className="scroll-to-top" aria-label="Scroll to top">
+                    ↑
                 </button>
             )}
         </div>
+
+
     );
 };
+
+
 
 export default Home;

@@ -1,16 +1,29 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './components/layout/ThemeProvider';
+import { LangProvider } from './components/layout/LangProvider';
+import Layout from './components/layout/Layout';
 import Home from './components/Home';
-import Blog from './components/Blog';
+import Projects from './components/Projects';
+import TravelRecord from './components/TravelRecord';
+import { Navigate } from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/blog" element={<Blog />} />
-      </Routes>
-    </Router>
+    <LangProvider>
+      <ThemeProvider>
+        <Router>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/travel-record" element={<TravelRecord />} />
+              <Route path="/TravelRecord" element={<Navigate to="/travel-record" replace />} />
+            </Route>
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </LangProvider>
   );
 };
 

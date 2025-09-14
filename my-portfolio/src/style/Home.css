@@ -1,98 +1,96 @@
-/* 通用樣式 */
-body,
-html {
+/* ====== 基礎與主題變數 ====== */
+:root {
+    --background-color: #fff;
+    --text-color: #000;
+    --link-color: #333;
+    --icon-background-color: #000;
+    /* 亮色主題下 icon 白底改為深底 + 白字 */
+    --icon-color: #fff;
+    --hr-background-color: #000;
+    --avatar-color: #000;
+    --scroll-button: #000;
+    --scroll-icon-button: #fff;
+    --transition: .3s ease;
+}
+
+.light-mode {
+    --background-color: #fff;
+    --text-color: #000;
+    --link-color: #333;
+    --icon-background-color: #000;
+    --icon-color: #fff;
+    --hr-background-color: #000;
+    --avatar-color: #000;
+    --scroll-button: #000;
+    --scroll-icon-button: #fff;
+}
+
+.dark-mode {
+    --background-color: #000;
+    --text-color: #fff;
+    --link-color: #fff;
+    --icon-background-color: #fff;
+    --icon-color: #000;
+    --hr-background-color: #fff;
+    --avatar-color: #fff;
+    --scroll-button: #fff;
+    --scroll-icon-button: #000;
+}
+
+html,
+body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
     height: 100%;
 }
 
-/* 變量 */
-:root {
-    --background-color: white;
-    --text-color: black;
-    --link-color: #333;
-    --icon-background-color: white;
-    --icon-color: black;
-    --bottom-info-color: blue;
-    --scroll-button: black;
-    --scroll-icon-button: white;
-}
-
-/* 明亮模式 */
-.light-mode {
-    --background-color: white;
-    --text-color: black;
-    --link-color: #333;
-    --icon-background-color: black;
-    --icon-color: white;
-    --bottom-info-color: blue;
-    --hr-background-color: black;
-    --avatar-color: rgb(0, 0, 0);
-    --scroll-button: black;
-    --scroll-icon-button: white;
-}
-
-/* 黑夜模式 */
-.dark-mode {
-    --background-color: black;
-    --text-color: white;
-    --link-color: white;
-    --icon-background-color: rgb(255, 255, 255);
-    --icon-color: black;
-    --bottom-info-color: blue;
-    --hr-background-color: white;
-    --avatar-color: rgb(255, 255, 255);
-    --scroll-button: rgb(255, 255, 255);
-    --scroll-icon-button: rgb(0, 0, 0);
-}
-
 div {
     background-color: var(--background-color);
     color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color var(--transition), color var(--transition);
 }
 
-/* 背景圖片容器 */
-.background-image {
-    width: 100% !important;
-    height: 200px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 20%;
-    border-bottom-right-radius: 20%;
-    z-index: 0;
-    object-fit: cover;
-    animation: slideDown 1.5s ease-in-out;
-}
-
-/* 动画效果 */
-@keyframes slideDown {
-    0% {
-        top: -200px;
-    }
-
-    100% {
-        top: 0;
-    }
-}
-
-/* menu樣式 */
+/* ====== 版面 ====== */
 .main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+.hero {
+    position: relative;
+    display: block;
+    width: 100%;
+    /* 預留空間，避免 avatar 壓住後面內容 */
+    margin-bottom: 0px;
+}
+
+.background-image {
+    display: block;
+    width: 100% !important;
+    height: 150px;
+    object-fit: cover;
+    border-bottom-left-radius: 20%;
+    border-bottom-right-radius: 20%;
+}
+
+@keyframes slideDown {
+    0% {
+        top: -200px
+    }
+
+    100% {
+        top: 0
+    }
 }
 
 .theme-toggle-button {
     position: absolute;
     top: 10px;
-    right: 10px !important;
+    right: 10px;
     cursor: pointer;
     font-size: 24px;
     width: 50px;
@@ -101,354 +99,53 @@ div {
     box-shadow: none;
 }
 
-
 .blog-container {
     max-width: 800px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding-top: 10px;
-    padding-bottom: 0px;
     text-align: center;
+    padding-top: 10px;
 }
 
 .blog-title {
     position: relative;
     font-size: 40px;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
-.blog-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.blog-item {
-    margin-bottom: 10px;
-}
-
-.blog-item a {
-    color: var(--link-color);
-    text-decoration: none;
-    font-size: 18px;
-}
-
-.blog-item a:hover {
-    color: #007bff;
-}
-
+/* ====== Avatar 與入場效果 ====== */
 .avatar {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid;
-    border-color: var(--avatar-color);
-    margin: 5px 0;
-}
-
-.avatar,
-.icon {
-    opacity: 0;
-    transition: opacity 1s ease;
-}
-
-.avatar.show,
-.icon.show {
-    opacity: 1;
-}
-
-.block {
-    background-color: var(--background-color);
     border: 2px solid var(--avatar-color);
-    color: var(--text-color);
-    padding: 20px;
-    border-radius: 20px;
-    margin: 10px auto;
-    /* 将左右 margin 设置为 auto 来水平居中 */
-    max-width: 600px;
-    width: calc(100% - 40px);
-    box-sizing: border-box;
-    opacity: 0;
-    transform: translateX(100%);
-    transition: opacity 1.5s ease, transform 1.5s ease;
-}
-
-.block.show {
-    opacity: 1;
-    transform: translateX(1);
-    animation: slideInFromRight 3s ease;
-}
-
-.block.visible {
-    opacity: 1;
-    transform: translateY(0);
-    /* 滑动到视口时恢复位置 */
-}
-
-@keyframes slideInFromRight {
-    0% {
-        right: -100%;
-    }
-
-    100% {
-        right: 50%;
-        transform: translateX(0);
-    }
-}
-
-.block.show {
-    animation: slideInFromRight 0.5s forwards;
-}
-
-.shape {
-    font-size: 25px;
-    display: inline-block;
-    vertical-align: middle;
-    position: relative;
-    transition: all .3s linear !important;
-}
-
-.nav-box {
-    position: fixed;
-    top: 200px;
-    /* 垂直偏移量 */
-    left: 0;
-    width: 150px;
-    background-color: #333;
-    padding-left: 0px;
-    z-index: 1;
-}
-
-/*選單線*/
-.line {
-    border-radius: 0px;
-    width: 24px !important;
-    height: 24px !important;
-    border-radius: 10px;
-    background: rgb(245, 139, 25);
-    cursor: pointer;
-    display: block;
-    padding: 30px;
-    position: fixed;
-    z-index: 1000;
-}
-
-.line .menu,
-.line .menu::before,
-.line .menu::after {
-    background: #ffffff;
-    content: '';
-    display: block;
-    height: 2px;
-    position: absolute;
-    transition: background ease .3s, top ease .3s .3s, transform ease .3s;
-    width: 20px;
-}
-
-.line .menu {
-    left: 18px;
-    right: 18px;
-    top: 30px;
-}
-
-.line .menu::before {
-    top: -6px;
-}
-
-.line .menu::after {
-    top: 6px;
-}
-
-/*點選選單變叉叉*/
-#menu:checked+.line .menu {
-    background: transparent;
-}
-
-#menu:checked+.line .menu::before {
-    transform: rotate(45deg);
-}
-
-#menu:checked+.line .menu::after {
-    transform: rotate(-45deg);
-}
-
-#menu:checked+.line .menu::before,
-#menu:checked+.line .menu::after {
-    top: 0;
-    transition: top ease .3s, transform ease .3s .3s;
-}
-
-/*選單開合*/
-#menu:checked~.menu-list {
-    width: 30vh;
-    height: 70vh;
-    border-radius: 15px;
-}
-
-.menu-list {
-    width: 0%;
-    height: 70vh;
-    padding: 0;
-    margin: 0 0px 50px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
-    padding-top: 60px;
-    position: fixed;
-    z-index: 2;
-    transition: all .6s;
-    overflow: hidden;
-    background: linear-gradient(to left top, #97cef0, #18104d);
-}
-
-.menu-list a {
-    display: grid;
-    grid-template-columns: auto auto;
-    align-items: center;
-    text-align: left;
-    width: 300px;
-    height: 20px;
-    display: block;
-    padding-top: 10px;
-    padding-bottom: 0px;
-    text-decoration: none;
-    position: relative;
-    font-family: 'Noto Sans TC', sans-serif;
-}
-
-.menu-list a .fa {
-    text-decoration: none;
-    margin-right: -1.1em;
-    margin-bottom: 0.03em;
-    transform: scale(0);
-    padding: 0px;
-    transition: .3s;
-}
-
-.menu-list li:hover .fa {
-    margin-right: 0em;
-    margin-bottom: 0.03em;
-    transform: scale(0.9);
-    padding: 10px;
-}
-
-.menu-list li:hover .fa {
-    position: relative;
-    padding: 0px;
-}
-
-.menu-list li:hover>a {
-    background-color: rgba(255, 255, 255, 0.5);
-}
-
-.menu-list li+li a::before {
-    content: '';
-    position: absolute;
-    border-top: 3px solid rgb(255, 255, 255, .4);
-    left: 10px;
-    right: 70px;
-    top: 0;
-}
-
-/*選單向外推*/
-.menu-list ul {
-    list-style: none;
-    font-size: 23px;
-    margin-top: 1px;
-    margin-left: 1px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    left: 100%;
-    width: 300px;
-    top: 0px;
-}
-
-/*隱藏核許框*/
-input#menu {
-    display: none;
-}
-
-.fa {
-    width: 20px;
-    height: 20px;
-    padding: 20%;
-    font-size: 30px;
-    text-align: center;
-    text-decoration: none;
-    margin: 5px 2px;
-    border-radius: 70%;
-    float: left;
-}
-
-.icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 35% !important;
-    margin: 2px 2px;
-    background: var(--icon-background-color);
-    animation: slideRight 1.5s ease-in-out;
-    object-fit: cover;
-}
-
-.fa:hover {
-    opacity: 0.8;
-}
-
-.fa-facebook,
-.fa-youtube,
-.fa-instagram,
-.fa-envelope {
-    color: var(--icon-color);
-}
-
-@keyframes slideRight {
-    0% {
-        left: 100px;
-    }
-
-    100% {
-        left: 500px;
-    }
-}
-
-.avatar {
+    margin: 5px 0;
     opacity: 0;
     transition: opacity 1s ease;
+}
+
+.avatar-overlap {
+    position: absolute;
+    left: 50%;
+    bottom: 0px;
+    /* 控制重疊深度，可自行調整 */
+    transform: translateX(-50%);
+    z-index: 2;
 }
 
 .avatar.show {
-    opacity: 1;
+    opacity: 1
 }
 
+/* ====== Icon 按鈕（整個白底皆可點） ====== */
 .connect-container {
     display: flex;
     align-items: center;
-    padding-top: 10px;
     flex-direction: column;
-}
-
-.button-container {
-    display: flex;
-    align-items: center;
-    margin-top: 5px;
-}
-
-.button {
-    display: flex;
-    justify-content: center;
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 0;
-    text-align: center;
-}
-
-.button li {
-    margin: 0 5px;
+    padding-top: 10px
 }
 
 hr {
@@ -456,22 +153,117 @@ hr {
     border: none;
     height: 3px !important;
     background-color: var(--hr-background-color);
-    margin: 0 auto;
-}
-
-.bottom-info span {
-    color: var(--bottom-info-color);
-}
-
-/* 切換按鈕樣式 */
-.theme-toggle-button {
-    cursor: pointer;
-    font-size: 24px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0 auto
 }
 
 
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 0;
+    margin: 0
+}
 
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    background: var(--icon-background-color);
+    color: var(--icon-color);
+    text-decoration: none;
+    /* 讓整顆都可點且無底線 */
+    transition: opacity var(--transition), transform var(--transition);
+}
+
+.icon i {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--icon-color)
+}
+
+.icon:hover {
+    opacity: .85;
+    transform: translateY(-1px)
+}
+
+/* ====== 內容卡片（Block） ====== */
+.block {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 20px 24px;
+    margin: 16px auto;
+    max-width: 900px;
+    width: calc(100% - 40px);
+    box-sizing: border-box;
+
+    /* 初始隱藏在邊上、透明 */
+    opacity: 0;
+    transform: translateX(0);
+    transition: opacity 1000ms ease, transform 1000ms ease;
+    /* 不要邊框與圓角 */
+    border: none !important;
+    border-radius: 0;
+}
+
+.block a {
+    /* text-decoration: none; */
+    color: inherit;
+}
+
+
+/* 方向：奇數（右→左）、偶數（左→右） */
+.block--rtl {
+    transform: translateX(130px);
+}
+
+.block--rtl .shape,
+.block--rtl .content {
+    align-self: flex-start;
+    text-align: left;
+    width: 100%;
+}
+
+/* 從右邊推入 */
+.block--ltr {
+    transform: translateX(-130px);
+}
+
+.block--ltr .shape,
+.block--ltr .content {
+    align-self: flex-end;
+    text-align: right;
+    width: 100%;
+}
+
+/* 從左邊推入 */
+
+/* 進場後狀態 */
+.block.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.title-right {
+    display: block;
+    /* ← 取代 inline-block，撐滿一行 */
+    width: 100%;
+    text-align: right;
+}
+
+.shape {
+    font-size: 25px;
+    display: block;
+    vertical-align: middle;
+    position: relative;
+    transition: all .3s linear !important
+}
+
+/* ====== 回到頂端 ====== */
 .scroll-to-top {
     position: fixed;
     bottom: 20px;
@@ -480,18 +272,102 @@ hr {
     color: var(--scroll-icon-button) !important;
     border: none;
     border-radius: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 7px !important;
-    padding-bottom: 7px !important;
+    padding: 7px 10px;
     cursor: pointer;
     font-size: 30px;
     display: none;
-    /* 初始隐藏 */
     z-index: 1000;
 }
 
 .scroll-to-top.show {
-    display: block;
-    /* 显示按钮 */
+    display: block
+}
+
+/* ===== Social footer（最底部深藍色 Bar） ===== */
+
+.bottom-time {
+    background: #072e45 !important;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.social-footer {
+    width: 100%;
+    background: #072e45;
+    /* 深藍色，接近你給的範例 */
+    padding: 18px 0;
+    margin-top: 48px;
+    /* 與內容留白 */
+}
+
+.social-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 置中排列 */
+    gap: 54px;
+    /* 圖示間距（桌機） */
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.social-link i {
+    font-size: 32px;
+    /* 圖示大小（桌機） */
+    line-height: 1;
+    color: #fff;
+    /* 白色 icon */
+    transition: transform .2s ease, opacity .2s ease;
+}
+
+.social-link:hover i {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+/* 手機尺寸調整 */
+@media (max-width: 640px) {
+    .social-nav {
+        gap: 28px;
+    }
+
+    .social-link i {
+        font-size: 26px;
+    }
+}
+
+/* 只在 Home：漢堡＋語言鈕都固定白色 */
+.route-home .home-burger {
+    color: #fff !important;
+    /* 三條線使用 currentColor → 變白 */
+}
+
+.route-home .home-burger .menu,
+.route-home .home-burger .menu::before,
+.route-home .home-burger .menu::after {
+    background: currentColor !important;
+    /* 確保線條跟著變白 */
+}
+
+/* 語言切換鈕固定白色邊框與字色 */
+.route-home .lang-toggle-button {
+    color: #fff !important;
+    border-color: #fff !important;
+    background: transparent !important;
+}
+
+.route-home .lang-toggle-button:hover {
+    background: rgba(255, 255, 255, .15) !important;
+    /* 深淺主題都看得清楚 */
+    color: #fff !important;
+}
+
+.route-home .lang-toggle-button:focus-visible {
+    outline: 2px solid #fff !important;
+    outline-offset: 2px;
 }

@@ -1,0 +1,373 @@
+/* 讓 Layout 成為全站殼 */
+.app-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-container {
+    flex: 1 0 auto;
+}
+
+@media (max-width:640px) {
+    .lang-toggle-button {
+        right: 125px;
+        font-size: 13px;
+        padding: 5px 8px;
+    }
+}
+
+.theme-toggle-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    width: 50px;
+    background: transparent !important;
+    border: none;
+    box-shadow: none;
+    z-index: 1100;
+}
+
+.line {
+    width: 24px !important;
+    height: 28px !important;
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+    display: block;
+    padding: 30px;
+    position: fixed;
+    z-index: 1000;
+}
+
+.line .menu,
+.line .menu::before,
+.line .menu::after {
+    background: var(--text-color);
+    content: '';
+    display: block;
+    height: 2px;
+    position: absolute;
+    transition: background 0.3s ease, top 0.3s ease 0.3s, transform 0.3s ease;
+    width: 20px;
+}
+
+.line .menu {
+    left: 18px;
+    top: 30px;
+}
+
+.line .menu::before {
+    top: -6px;
+}
+
+.line .menu::after {
+    top: 6px;
+}
+
+#menu:checked+.line .menu {
+    background: transparent;
+}
+
+#menu:checked+.line .menu::before {
+    transform: rotate(45deg);
+}
+
+#menu:checked+.line .menu::after {
+    transform: rotate(-45deg);
+}
+
+#menu:checked+.line .menu::before,
+#menu:checked+.line .menu::after {
+    top: 0;
+    transition: top 0.3s ease, transform 0.3s ease 0.3s;
+}
+
+#menu:checked~.menu-list {
+    transform: scaleX(1);
+    border-radius: 15px;
+}
+
+.menu-list {
+    position: fixed;
+    top: 75px;
+    right: 0px;
+    left: auto;
+
+    width: min(40vw, 320px);
+    height: 70vh;
+    overflow: hidden;
+    padding-top: 40px;
+    margin: 0 0 50px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+    background: linear-gradient(to left top, #97cef0, #18104d);
+    z-index: 1000;
+
+    transform: scaleX(0);
+    transform-origin: 100% 0;
+    transition: transform .45s ease;
+}
+
+.menu-list a {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    text-align: left;
+    width: 300px;
+    height: 20px;
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 0;
+    text-decoration: none;
+    position: relative;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: #fff;
+}
+
+.menu-list a .fa {
+    text-decoration: none;
+    margin-left: -1.1em;
+    margin-bottom: 0.03em;
+    transform: scale(0);
+    padding: 0;
+    transition: .3s;
+}
+
+.menu-list li:hover .fa {
+    margin-left: 0;
+    margin-bottom: 0.03em;
+    transform: scale(0.9);
+    padding: 10px;
+    position: relative;
+}
+
+.menu-list li:hover>a {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.menu-list li+li a::before {
+    content: '';
+    position: absolute;
+    border-top: 3px solid rgba(255, 255, 255, .4);
+    left: 10px;
+    right: 70px;
+    top: 0;
+}
+
+.menu-list ul {
+    list-style: none;
+    font-size: 23px;
+    margin-top: 1px;
+    margin-left: 1px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    left: 100%;
+    width: 300px;
+    top: 0;
+}
+
+/* 隱藏核許框 */
+input#menu {
+    display: none;
+}
+
+.theme-toggle-button {
+    right: 70px;
+}
+
+
+.bottom-time {
+    background: #072e45 !important;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.social-footer {
+    width: 100%;
+    background: #072e45;
+    padding: 18px 0;
+    margin-top: 48px;
+}
+
+.social-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 54px;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.social-link i {
+    font-size: 32px;
+    line-height: 1;
+    color: #fff;
+    transition: transform .2s ease, opacity .2s ease;
+}
+
+.social-link:hover i {
+    transform: translateY(-1px);
+    opacity: .9;
+}
+
+@media (max-width:640px) {
+    .social-nav {
+        gap: 28px;
+    }
+
+    .social-link i {
+        font-size: 26px;
+    }
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.theme-toggle-button:focus,
+.theme-toggle-button:active,
+.nav-box .line:focus,
+.nav-box .line:active,
+.menu-list a:focus,
+.menu-list a:active,
+.social-link:focus,
+.social-link:active {
+    outline: none;
+    box-shadow: none;
+}
+
+a,
+button,
+.social-link,
+.nav-box .line,
+.theme-toggle-button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menu-list a:focus-visible,
+.social-link:focus-visible,
+.theme-toggle-button:focus-visible,
+.nav-box .line:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
+.nav-box .line {
+    position: fixed;
+    top: 13px;
+    right: 15px;
+    width: 44px;
+    height: 44px;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: var(--text-color);
+    cursor: pointer;
+    z-index: 1101;
+}
+
+.nav-box .line .menu,
+.nav-box .line .menu::before,
+.nav-box .line .menu::after {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 22px;
+    height: 2px;
+    content: '';
+    transition: transform .3s ease;
+}
+
+.nav-box .line .menu {
+    transform: translate(-50%, -50%);
+}
+
+.nav-box .line .menu::before {
+    transform: translate(-50%, -50%) translateY(-6px);
+}
+
+.nav-box .line .menu::after {
+    transform: translate(-50%, -50%) translateY(6px);
+}
+
+#menu:checked+.line .menu {
+    background: transparent !important;
+}
+
+#menu:checked+.line .menu::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+#menu:checked+.line .menu::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.lang-toggle-button {
+    position: fixed;
+    top: 10px;
+    right: 60px;
+    z-index: 1100;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid var(--text-color);
+    background: transparent;
+    color: var(--text-color);
+    border-radius: 6px;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.lang-toggle-button:hover {
+    background: var(--text-color);
+    color: var(--background-color);
+}
+
+/* 只在首頁固定白色，不吃主題變數 */
+.is-home .lang-toggle-button,
+.is-home [data-role="lang-toggle"] {
+    color: #fff !important;
+    border-color: #fff !important;
+    background: transparent !important;
+}
+
+.is-home .lang-toggle-button:hover,
+.is-home [data-role="lang-toggle"]:hover {
+    background: rgba(255, 255, 255, .15) !important;
+    color: #fff !important;
+}
+
+/* 漢堡三條線改白色（無論主題） */
+.is-home .line,
+.is-home .nav-box .line {
+    color: #fff !important;
+}
+
+.is-home .line .menu,
+.is-home .line .menu::before,
+.is-home .line .menu::after {
+    background: #fff !important;
+    /* 有些實作不是 currentColor，就直接指定白色 */
+}
+
+/* 若你的漢堡外層本來有橘色底，順便拿掉 */
+.is-home .line {
+    background: transparent !important;
+}
+
+/* 可選：避免聚焦外框是黑色 */
+.is-home .line:focus,
+.is-home .lang-toggle-button:focus {
+    outline: 2px solid #fff !important;
+    outline-offset: 2px;
+}

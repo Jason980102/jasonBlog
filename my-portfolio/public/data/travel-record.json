@@ -1,0 +1,44 @@
+{
+    "posts": [
+        {
+            "id": "nyc-liberty",
+            "title": {
+                "en": "Statue of Liberty",
+                "zh": "自由女神像"
+            },
+            "caption": {
+                "en": "From Staten Island Ferry",
+                "zh": "在史坦頓島渡輪上"
+            },
+            "date": "2025-09-1",
+            "src": "/photos/nyc/liberty.jpg"
+        },
+        {
+            "id": "nyc-little-island",
+            "title": {
+                "en": "Little Island",
+                "zh": "小島公園"
+            },
+            "date": "2025-09-1",
+            "src": "/photos/nyc/little-island.jpg"
+        },
+        {
+            "id": "nyc-skyline",
+            "title": {
+                "en": "Lower Manhattan",
+                "zh": "曼哈頓天際線"
+            },
+            "date": "2025-09-1",
+            "src": "/photos/nyc/manhattan.jpg"
+        },
+        {
+            "id": "nyc-skyline",
+            "title": {
+                "en": "911-memorial",
+                "zh": "911 紀念公園"
+            },
+            "date": "2025-09-1",
+            "src": "/photos/nyc/911-memorial.jpg"
+        }
+    ]
+}

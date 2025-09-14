@@ -1,0 +1,15 @@
+{
+    "blocks": [
+        {
+            "id": "intro",
+            "title": {
+                "en": "Introduction",
+                "zh": "自我介紹"
+            },
+            "content": {
+                "en": "<h6>Hello everyone, my name is Jason Chen, and I am currently pursuing a <a href=\"https://cs.nyu.edu/home/index.html\" target=\"_blank\">Master’s degree in Computer Science at the Courant Institute of Mathematical Sciences, New York University</a>.<br/><br/>I am proficient in Java, Python, JavaScript, C, and Kotlin, with solid experience in both frontend development and AI applications.<br/><br/>Academically, I have led a Ministry of Science and Technology undergraduate research project and co-authored a paper with professors at the Smart Computing Forum. I have also been honored with multiple Book Awards for academic excellence and received recognition in programming competitions. In addition, I interned as part of a Web UX/UI team, where I worked on frontend design and development using React and JavaScript.<br/><br/>Looking ahead, my goal is to apply artificial intelligence across diverse domains to create impactful and practical solutions.</h6>",
+                "zh": "<h6>大家好，我是 陳敬祐(Jason Chen)，目前就讀於 <a href=\"https://cs.nyu.edu/home/index.html\" target=\"_blank\">紐約大學 Courant Institute 的 MSCS 碩士班</a>。<br/><br/>我擅長 Java、Python、JavaScript、C 與 Kotlin，同時具備前端開發與人工智慧應用的經驗。<br/><br/>在學術上，我曾主持 科技部大專生研究計畫，並在 智慧運算論壇 與教授共同發表研究論文。過去也多次獲得 書卷獎 與 程式設計競賽獎項。此外，我曾於企業實習中參與 Web UX/UI 團隊，負責 React 與 JavaScript 前端開發設計。<br/><br/>未來，我希望能夠將\"人工智慧\"應用於不同領域，開發具有實際影響力的解決方案。</h6>"
+            }
+        }
+    ]
+}
