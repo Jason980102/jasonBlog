@@ -7,41 +7,6 @@ body {
     height: 100%;
 }
 
-/* 變數 */
-:root {
-    --background-color: white;
-    --text-color: black;
-    --link-color: #333;
-    --icon-background-color: white;
-    --icon-color: black;
-    --bottom-info-color: blue;
-    --hr-background-color: black;
-    --avatar-color: #000;
-}
-
-/* 明亮模式 */
-.light-mode {
-    --background-color: white;
-    --text-color: black;
-    --link-color: #333;
-    --icon-background-color: black;
-    --icon-color: white;
-    --bottom-info-color: blue;
-    --hr-background-color: black;
-    --avatar-color: rgb(0, 0, 0);
-}
-
-/* 黑夜模式 */
-.dark-mode {
-    --background-color: black;
-    --text-color: white;
-    --link-color: white;
-    --icon-background-color: #fff;
-    --icon-color: black;
-    --bottom-info-color: blue;
-    --hr-background-color: white;
-    --avatar-color: #fff;
-}
 
 div {
     background-color: var(--background-color);
@@ -57,24 +22,6 @@ div {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.theme-toggle-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    cursor: pointer;
-    font-size: 24px;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: #ffffff;
-    color: #000000;
-    border: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.dark-mode .theme-toggle-button {
-    background-color: #2c3e50;
-    color: #ecf0f1;
-}
 
 .blog-container {
     max-width: 800px;

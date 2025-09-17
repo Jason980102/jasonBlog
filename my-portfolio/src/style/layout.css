@@ -20,7 +20,7 @@
 .theme-toggle-button {
     position: fixed;
     top: 10px;
-    right: 10px;
+    left: 10px;
     cursor: pointer;
     font-size: 24px;
     width: 50px;
@@ -173,11 +173,6 @@
 input#menu {
     display: none;
 }
-
-.theme-toggle-button {
-    right: 70px;
-}
-
 
 .bottom-time {
     background: #072e45 !important;

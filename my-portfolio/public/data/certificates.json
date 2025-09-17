@@ -1,0 +1,32 @@
+{
+    "certificates": [
+        {
+            "id": "scf-2024-poster",
+            "title": {
+                "en": "SCF 2024 Poster",
+                "zh": "2024 智慧運算論壇 海報"
+            },
+            "desc": {
+                "en": "Institutional research poster.",
+                "zh": "校務研究海報。"
+            },
+            "date": "2024-09-01",
+            "src": "/certificates/_pdf-thumb.png",
+            "fileUrl": "/certificates/2024智慧運算論壇_運算思維融入課程與教學的推展與執行之校務研究分析_海報001.pdf"
+        },
+        {
+            "id": "deans-list-111-2",
+            "title": {
+                "en": "Dean's List (111-2)",
+                "zh": "111-2 書卷獎"
+            },
+            "desc": {
+                "en": "Award certificate",
+                "zh": "書卷獎證明"
+            },
+            "date": "2023-06-30",
+            "src": "/certificates/_pdf-thumb.png",
+            "fileUrl": "/certificates/111-2書卷獎.pdf"
+        }
+    ]
+}

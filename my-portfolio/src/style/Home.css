@@ -11,6 +11,12 @@
     --scroll-button: #000;
     --scroll-icon-button: #fff;
     --transition: .3s ease;
+    --safe-top: max(10px, env(safe-area-inset-top));
+    --safe-right: max(10px, env(safe-area-inset-right));
+    --ctrl-gap: clamp(6px, 2.2vw, 10px);
+    /* 按鈕間距 */
+    --ctrl-size: clamp(38px, 7.5vw, 44px);
+    /* 最小可點擊尺寸 */
 }
 
 .light-mode {
@@ -45,19 +51,13 @@ body {
     height: 100%;
 }
 
-div {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: background-color var(--transition), color var(--transition);
-}
-
 /* ====== 版面 ====== */
 .main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    transition: background-color var(--transition), color var(--transition);
+    transition: background-color var(--transition), color var(--transition) !important;
 }
 
 .hero {
@@ -68,13 +68,17 @@ div {
     margin-bottom: 0px;
 }
 
+.hero-overlay {
+    background: transparent !important;
+}
+
+
 .background-image {
     display: block;
     width: 100% !important;
-    height: 150px;
-    object-fit: cover;
-    border-bottom-left-radius: 20%;
-    border-bottom-right-radius: 20%;
+    aspect-ratio: 16 / 9;
+    /* 關鍵：固定 16:9 */
+    overflow: hidden;
 }
 
 @keyframes slideDown {
@@ -87,17 +91,7 @@ div {
     }
 }
 
-.theme-toggle-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 24px;
-    width: 50px;
-    background-color: transparent !important;
-    border: none;
-    box-shadow: none;
-}
+
 
 .blog-container {
     max-width: 800px;
@@ -115,10 +109,11 @@ div {
     margin: 20px 0;
 }
 
+
 /* ====== Avatar 與入場效果 ====== */
 .avatar {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--avatar-color);
@@ -192,7 +187,7 @@ hr {
 }
 
 /* ====== 內容卡片（Block） ====== */
-.block {
+.home-block {
     background-color: var(--background-color);
     color: var(--text-color);
     padding: 20px 24px;
@@ -200,41 +195,39 @@ hr {
     max-width: 900px;
     width: calc(100% - 40px);
     box-sizing: border-box;
-
-    /* 初始隱藏在邊上、透明 */
     opacity: 0;
     transform: translateX(0);
-    transition: opacity 1000ms ease, transform 1000ms ease;
+    transition: opacity 3s ease, transform 3s ease;
     /* 不要邊框與圓角 */
     border: none !important;
     border-radius: 0;
 }
 
-.block a {
+.home-block a {
     /* text-decoration: none; */
     color: inherit;
 }
 
 
 /* 方向：奇數（右→左）、偶數（左→右） */
-.block--rtl {
+.home-block--rtl {
     transform: translateX(130px);
 }
 
-.block--rtl .shape,
-.block--rtl .content {
+.home-block--rtl .shape,
+.home-block--rtl .content {
     align-self: flex-start;
     text-align: left;
     width: 100%;
 }
 
 /* 從右邊推入 */
-.block--ltr {
+.home-block--ltr {
     transform: translateX(-130px);
 }
 
-.block--ltr .shape,
-.block--ltr .content {
+.home-block--ltr .shape,
+.home-block--ltr .content {
     align-self: flex-end;
     text-align: right;
     width: 100%;
@@ -243,7 +236,7 @@ hr {
 /* 從左邊推入 */
 
 /* 進場後狀態 */
-.block.visible {
+.home-block.visible {
     opacity: 1;
     transform: translateX(0);
 }
@@ -322,7 +315,7 @@ hr {
     line-height: 1;
     color: #fff;
     /* 白色 icon */
-    transition: transform .2s ease, opacity .2s ease;
+    transition: transform .3s ease, opacity .3s ease;
 }
 
 .social-link:hover i {
@@ -370,4 +363,221 @@ hr {
 .route-home .lang-toggle-button:focus-visible {
     outline: 2px solid #fff !important;
     outline-offset: 2px;
+}
+
+
+
+/* ===== 首屏 16:9 與置中內容 ===== */
+.hero-16x9 {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.hero-16x9 .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 視差一點點（沿用你原本的想法），--hero-p 來自 Home.tsx */
+    transform: translateY(calc(var(--hero-p, 0) * -50%)) scale(calc(1 + var(--hero-p, 0) * 0.06));
+    transition: transform 1s;
+    /* 跟手 */
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    pointer-events: none;
+}
+
+.hero-avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--avatar-color);
+    transform: scale(calc(1 - var(--hero-p, 0) * 0.2));
+    transition: transform 3s;
+    opacity: calc(1 - var(--hero-p, 0));
+}
+
+.hero-name {
+    margin-top: 0px;
+    font-size: clamp(28px, 4.6vw, 44px);
+    line-height: 1.15;
+}
+
+.route-home .blog-title {
+    display: none;
+}
+
+/* 你原本的固定按鈕在 layout.css 已用 fixed + z-index=1100 以上
+   下列兩條確保首頁上它們維持白色視覺、不被 sticky 列蓋住 */
+.is-home .lang-toggle-button,
+.is-home .nav-box .line {
+    position: fixed;
+    z-index: 1101;
+}
+
+/* === 安全區（與右上固定按鈕避讓） === */
+:root {
+    --controls-h: 56px;
+    --controls-top: max(12px, env(safe-area-inset-top));
+    --controls-safe: calc(var(--controls-h) + var(--controls-top));
+}
+
+@media (max-width: 480px) {
+    :root {
+        --controls-h: 50px;
+    }
+}
+
+/* === 首屏 16:9 與中央疊層（保留你原本 hero-* 寫法） === */
+.hero-16x9 {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+
+.hero-16x9 .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translateY(calc(var(--hero-p, 0) * -20%)) scale(calc(1 + var(--hero-p, 0)*0.04));
+}
+
+.hero-overlay {
+    position: absolute;
+    /* 置中，但上邊界避開右上固定按鈕 */
+    inset: var(--controls-safe) clamp(16px, 4vw, 48px) clamp(16px, 6vh, 80px) clamp(16px, 4vw, 48px);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    background: transparent !important;
+    pointer-events: none;
+}
+
+/* 中央狀態（初始） */
+:root {
+    --avatar-min: 96px;
+    --avatar-max: 200px;
+    --name-min: 24px;
+    --name-max: 48px;
+}
+
+.hero-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, .92);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .3);
+    opacity: 1 !important;
+    transform: scale(calc(1 - var(--hero-p, 0) * 0.15));
+}
+
+.hero-name {
+    margin-top: clamp(8px, 2.5vw, 14px);
+    font-size: clamp(var(--name-min), 7vw, var(--name-max));
+    line-height: 1.1;
+    text-wrap: balance;
+    opacity: 1;
+}
+
+/* 小螢幕再縮一點 */
+@media (max-width: 480px) {
+    :root {
+        --avatar-min: 84px;
+        --avatar-max: 160px;
+        --name-min: 22px;
+        --name-max: 36px;
+    }
+}
+
+/* === 吸頂狀態（滑到自介時）— 不再用另外一組 sticky，直接把這一組搬到頂部 === */
+.route-home.is-shrink .hero-overlay {
+    position: fixed;
+    /* 關鍵：變成固定在視窗 */
+    inset: auto auto auto auto;
+    /* 清空 inset，改用 top/left 對位 */
+    top: calc(var(--controls-safe) + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    height: auto;
+    padding: 0;
+    z-index: 1099;
+    /* 低於右上控制列（1102），高於內文 */
+    display: grid;
+    place-items: center;
+}
+
+
+/* 三顆功能鍵統一固定，保證觸控尺寸、層級與對齊 */
+.lang-toggle-button,
+.theme-toggle-button,
+.home-burger {
+    position: fixed !important;
+    top: var(--safe-top) !important;
+    z-index: 1102 !important;
+    min-width: var(--ctrl-size);
+    min-height: var(--ctrl-size);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* 由右向左排：漢堡 → 日夜 → 語言 */
+.home-burger {
+    right: var(--safe-right) !important;
+}
+
+.theme-toggle-button {
+    right: calc(var(--safe-right) + var(--ctrl-size) + var(--ctrl-gap)) !important;
+}
+
+.lang-toggle-button {
+    right: calc(var(--safe-right) + (var(--ctrl-size) + var(--ctrl-gap))) !important;
+    padding-inline: clamp(8px, 2.4vw, 12px);
+    font-size: clamp(12px, 3.3vw, 16px);
+    /* label 在窄螢幕會自動縮小 */
+    max-width: 42vw;
+    /* 防止語言字太長溢出 */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* 超窄螢幕（≤340px）改為「垂直堆疊」避免重疊 */
+@media (max-width: 340px) {
+
+    .home-burger,
+    .theme-toggle-button,
+    .lang-toggle-button {
+        right: var(--safe-right) !important;
+    }
+
+    .home-burger {
+        top: var(--safe-top) !important;
+    }
+
+    .theme-toggle-button {
+        top: calc(var(--safe-top) + var(--ctrl-size) + var(--ctrl-gap)) !important;
+    }
+
+    .lang-toggle-button {
+        top: calc(var(--safe-top) + (var(--ctrl-size) + var(--ctrl-gap)) * 2) !important;
+    }
 }

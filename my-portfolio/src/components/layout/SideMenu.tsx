@@ -9,7 +9,7 @@ const SideMenu: React.FC = () => {
                 <ul>
                     <li><b><a href="/"><i className="fa fa-home"></i>Home</a></b></li>
                     <li><b><a href="/projects"><i className="fa fa-chevron-circle-right"></i>Projects</a></b></li>
-                    <li><b><a href="俄羅斯方塊製作步驟.html"><i className="fa fa-chevron-circle-right"></i>Work</a></b></li>
+                    <li><b><a href="/certificate"><i className="fa fa-certificate"></i> Certificate</a></b></li>
                     <li><b><a href="/travel-record"><i className="fa fa-image"></i> Travel Record</a></b></li>
 
                 </ul>

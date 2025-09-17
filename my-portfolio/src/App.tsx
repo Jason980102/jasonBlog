@@ -2,11 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './components/layout/ThemeProvider';
 import { LangProvider } from './components/layout/LangProvider';
+import { Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Home from './components/Home';
 import Projects from './components/Projects';
 import TravelRecord from './components/TravelRecord';
-import { Navigate } from 'react-router-dom';
+import Certificate from './components/Certificate';
+
 
 const App: React.FC = () => {
   return (
@@ -19,6 +21,7 @@ const App: React.FC = () => {
               <Route path="/projects" element={<Projects />} />
               <Route path="/travel-record" element={<TravelRecord />} />
               <Route path="/TravelRecord" element={<Navigate to="/travel-record" replace />} />
+              <Route path="/certificate" element={<Certificate />} />
             </Route>
           </Routes>
         </Router>
